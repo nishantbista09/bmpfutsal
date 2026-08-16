@@ -41,8 +41,11 @@ function Contact() {
               <Phone className="mt-1 size-5 text-primary" />
               <div>
                 <p className="font-semibold">Phone</p>
-                <a href={`tel:${VENUE.phone}`} className="text-sm text-muted-foreground">
+                <a href={`tel:${VENUE.phone}`} className="block text-sm text-muted-foreground">
                   {VENUE.phone}
+                </a>
+                <a href={`tel:${VENUE.phoneAlt}`} className="block text-sm text-muted-foreground">
+                  {VENUE.phoneAlt}
                 </a>
               </div>
             </div>

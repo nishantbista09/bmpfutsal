@@ -27,9 +27,13 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <span className="grid size-9 place-items-center rounded-lg bg-primary text-primary-foreground font-display text-xl">
-            B
-          </span>
+          <img
+            src={logoAsset.url}
+            alt="BMP Sports Academy logo"
+            width={36}
+            height={36}
+            className="size-9 rounded-lg bg-white object-contain p-0.5"
+          />
           <span className="text-display text-2xl">{VENUE.name}</span>
         </Link>
 
