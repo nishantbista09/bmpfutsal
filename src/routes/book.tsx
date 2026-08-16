@@ -141,7 +141,7 @@ function BookPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, date, courtId, taken]);
 
-  const total = rate * duration;
+  const total = startHour === null ? 0 : priceForRange(startHour, duration);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
