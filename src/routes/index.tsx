@@ -17,11 +17,11 @@ export const Route = createFileRoute("/")({
         content:
           "Book a floodlit futsal court at BMP Futsal in seconds. Live slot availability, instant online payment and confirmed bookings.",
       },
-      { property: "og:title", content: "BMP Futsal — Book Your Futsal Pitch Online" },
+      { property: "og:title", content: "BMP Futsal — Book Your Futsal Pitch Online in Kathmandu" },
       {
         property: "og:description",
         content:
-          "Live slot availability, online payment and instant booking confirmation at BMP Futsal, Kathmandu.",
+          "Book a floodlit futsal court at BMP Futsal in seconds. Live slot availability, instant online payment and confirmed bookings.",
       },
     ],
   }),
