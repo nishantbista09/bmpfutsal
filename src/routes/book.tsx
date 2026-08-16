@@ -105,7 +105,7 @@ function BookPage() {
   });
 
   const court = courts?.find((c) => c.id === courtId);
-  const rate = Number(court?.price_per_hour ?? 0);
+  
 
   const busyHours = useMemo(() => {
     const set = new Set<number>();
