@@ -1,21 +1,22 @@
 export const VENUE = {
   name: "BMP Futsal",
   tagline: "Book your pitch. Bring your squad. Play under the lights.",
-  phone: "+977 9800000000",
-  email: "hello@bmpfutsal.com",
-  address: "BMP Futsal Arena, Kathmandu, Nepal",
+  phone: "+977 9851086037",
+  phoneAlt: "+977 9841392404",
+  email: "bmpfutsal@gmail.com",
+  address: "BMP Futsal Ground, Kathmandu, Nepal",
   mapsUrl: "https://maps.app.goo.gl/zCTah6x5aLZyyvnTA",
   mapsEmbed:
     "https://www.google.com/maps?q=27.7172,85.3240&z=15&output=embed",
   openFrom: 6,
-  openTo: 23,
+  openTo: 20,
   currency: "Rs.",
 } as const;
 
 export const PAYMENT_METHODS = [
-  { id: "esewa", label: "eSewa", hint: "Send to eSewa ID 9800000000 (BMP Futsal)" },
-  { id: "khalti", label: "Khalti", hint: "Send to Khalti 9800000000 (BMP Futsal)" },
-  { id: "bank", label: "Bank / Fonepay QR", hint: "BMP Futsal Pvt. Ltd. — A/C 0123456789012" },
+  { id: "esewa", label: "eSewa", hint: "Send to eSewa 9851086037 (BMP Futsal)" },
+  { id: "khalti", label: "Khalti", hint: "Send to Khalti 9851086037 (BMP Futsal)" },
+  { id: "fonepay", label: "Fonepay QR", hint: "Scan Fonepay QR — BMP Futsal" },
 ] as const;
 
 export function formatMoney(amount: number) {
