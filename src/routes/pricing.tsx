@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { supabase } from "@/integrations/supabase/client";
-import { formatMoney, formatHour, VENUE } from "@/lib/venue";
+import { formatMoney, formatHour, VENUE, TIME_SLOTS } from "@/lib/venue";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
