@@ -135,10 +135,18 @@ function Home() {
                 {court.capacity} · {court.surface}
               </p>
               <p className="mt-3 flex-1 text-sm text-muted-foreground">{court.description}</p>
-              <p className="mt-4 text-display text-3xl">
-                {formatMoney(Number(court.price_per_hour))}
-                <span className="ml-1 text-sm font-normal text-muted-foreground">/ hour</span>
-              </p>
+              <div className="mt-4 space-y-1 text-sm text-muted-foreground">
+                {TIME_SLOTS.map((slot) => (
+                  <p key={slot.id} className="flex justify-between">
+                    <span>
+                      {slot.label} · {slot.note}
+                    </span>
+                    <span className="font-semibold text-foreground">
+                      {formatMoney(slot.rate)}/hr
+                    </span>
+                  </p>
+                ))}
+              </div>
               <Button asChild className="mt-4">
                 <Link to="/book">Check availability</Link>
               </Button>
