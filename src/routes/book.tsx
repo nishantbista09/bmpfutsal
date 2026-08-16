@@ -347,6 +347,15 @@ function BookPage() {
                       : `${formatHour(startHour)} – ${formatHour(startHour + duration)}`}
                   </span>
                 </p>
+                {startHour !== null && (
+                  <p className="mt-1 flex justify-between">
+                    <span className="text-muted-foreground">Session</span>
+                    <span>
+                      {slotForHour(startHour)?.label ?? "—"} · {formatMoney(rateForHour(startHour))}
+                      /hr
+                    </span>
+                  </p>
+                )}
                 <p className="mt-3 flex justify-between border-t border-border pt-3 text-base font-semibold">
                   <span>Total</span>
                   <span className="text-primary">{formatMoney(total)}</span>
