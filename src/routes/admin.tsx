@@ -98,11 +98,12 @@ function AdminPage() {
   const setStatus = async (
     id: string,
     status: string,
-    payment_status?: string,
+    paymentStatus?: string,
   ) => {
-    const patch: Record<string, string> = { status };
-    if (payment_status) patch['payment_status'] = payment_status;
-    const { error } = await supabase.from("bookings").update(patch).eq("id", id);
+    const { error } = await supabase
+      .from("bookings")
+      .update(paymentStatus ? { status, payment_status: paymentStatus } : { status })
+      .eq("id", id);
     if (error) {
       toast.error(error.message);
       return;
