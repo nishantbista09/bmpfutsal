@@ -15,8 +15,12 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   VENUE,
   PAYMENT_METHODS,
+  TIME_SLOTS,
   formatHour,
   formatMoney,
+  priceForRange,
+  rateForHour,
+  slotForHour,
   timeString,
   todayISO,
   prettyDate,
@@ -101,7 +105,7 @@ function BookPage() {
   });
 
   const court = courts?.find((c) => c.id === courtId);
-  const rate = Number(court?.price_per_hour ?? 0);
+  
 
   const busyHours = useMemo(() => {
     const set = new Set<number>();
@@ -137,7 +141,7 @@ function BookPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, date, courtId, taken]);
 
-  const total = rate * duration;
+  const total = startHour === null ? 0 : priceForRange(startHour, duration);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -281,26 +285,42 @@ function BookPage() {
               <p className="mt-1 text-xs text-muted-foreground">
                 {prettyDate(date)} · greyed-out slots are already booked or in the past.
               </p>
-              <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
-                {hours.map((h) => {
-                  const available = canFit(h, duration);
-                  const selected = startHour === h;
+              <div className="mt-5 space-y-5">
+                {TIME_SLOTS.map((slot) => {
+                  const slotHours = hours.filter((h) => h >= slot.from && h < slot.to);
+                  if (slotHours.length === 0) return null;
                   return (
-                    <button
-                      key={h}
-                      type="button"
-                      disabled={!available}
-                      onClick={() => setStartHour(h)}
-                      className={`rounded-lg border px-2 py-3 text-sm transition-colors ${
-                        selected
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : available
-                            ? "border-border hover:bg-secondary"
-                            : "cursor-not-allowed border-border/50 bg-muted/40 text-muted-foreground/50 line-through"
-                      }`}
-                    >
-                      {formatHour(h)}
-                    </button>
+                    <div key={slot.id}>
+                      <div className="flex items-baseline justify-between">
+                        <p className="text-sm font-semibold">{slot.label}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {slot.note} · {formatMoney(slot.rate)}/hr
+                        </p>
+                      </div>
+                      <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4">
+                        {slotHours.map((h) => {
+                          const available = canFit(h, duration);
+                          const selected = startHour === h;
+                          return (
+                            <button
+                              key={h}
+                              type="button"
+                              disabled={!available}
+                              onClick={() => setStartHour(h)}
+                              className={`rounded-lg border px-2 py-3 text-sm transition-colors ${
+                                selected
+                                  ? "border-primary bg-primary text-primary-foreground"
+                                  : available
+                                    ? "border-border hover:bg-secondary"
+                                    : "cursor-not-allowed border-border/50 bg-muted/40 text-muted-foreground/50 line-through"
+                              }`}
+                            >
+                              {formatHour(h)}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   );
                 })}
               </div>
@@ -327,6 +347,15 @@ function BookPage() {
                       : `${formatHour(startHour)} – ${formatHour(startHour + duration)}`}
                   </span>
                 </p>
+                {startHour !== null && (
+                  <p className="mt-1 flex justify-between">
+                    <span className="text-muted-foreground">Session</span>
+                    <span>
+                      {slotForHour(startHour)?.label ?? "—"} · {formatMoney(rateForHour(startHour))}
+                      /hr
+                    </span>
+                  </p>
+                )}
                 <p className="mt-3 flex justify-between border-t border-border pt-3 text-base font-semibold">
                   <span>Total</span>
                   <span className="text-primary">{formatMoney(total)}</span>

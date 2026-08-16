@@ -78,21 +78,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BMP Futsal — Book Your Futsal Pitch Online in Kathmandu" },
+      { title: "BMP Futsal — Book Your Futsal Pitch Online in Lalitpur" },
       {
         name: "description",
         content:
           "Book a floodlit futsal court at BMP Futsal in seconds. Live slot availability, instant online payment and confirmed bookings.",
       },
       { name: "author", content: "BMP Futsal" },
-      { property: "og:title", content: "BMP Futsal — Book Your Futsal Pitch Online in Kathmandu" },
+      { property: "og:title", content: "BMP Futsal — Book Your Futsal Pitch Online in Lalitpur" },
       {
         property: "og:description",
         content: "Book a floodlit futsal court at BMP Futsal in seconds. Live slot availability, instant online payment and confirmed bookings.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "BMP Futsal — Book Your Futsal Pitch Online in Kathmandu" },
+      { name: "twitter:title", content: "BMP Futsal — Book Your Futsal Pitch Online in Lalitpur" },
       { name: "twitter:description", content: "Book a floodlit futsal court at BMP Futsal in seconds. Live slot availability, instant online payment and confirmed bookings." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6a50b89c3bd83bc179cdffe4ea096bb6/id-preview-0e4b8795--8dca9518-8868-41bc-a0b7-6ebb00b6ea10.lovable.app-1786848034854.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6a50b89c3bd83bc179cdffe4ea096bb6/id-preview-0e4b8795--8dca9518-8868-41bc-a0b7-6ebb00b6ea10.lovable.app-1786848034854.png" },

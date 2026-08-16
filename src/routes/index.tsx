@@ -6,18 +6,18 @@ import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { supabase } from "@/integrations/supabase/client";
-import { VENUE, formatHour, formatMoney } from "@/lib/venue";
+import { VENUE, formatHour, formatMoney, TIME_SLOTS } from "@/lib/venue";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "BMP Futsal — Book Your Futsal Pitch Online in Kathmandu" },
+      { title: "BMP Futsal — Book Your Futsal Pitch Online in Lalitpur" },
       {
         name: "description",
         content:
           "Book a floodlit futsal court at BMP Futsal in seconds. Live slot availability, instant online payment and confirmed bookings.",
       },
-      { property: "og:title", content: "BMP Futsal — Book Your Futsal Pitch Online in Kathmandu" },
+      { property: "og:title", content: "BMP Futsal — Book Your Futsal Pitch Online in Lalitpur" },
       {
         property: "og:description",
         content:
@@ -80,7 +80,7 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
         <div className="relative mx-auto max-w-6xl px-4 py-24 sm:py-32">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary">
-            Kathmandu · Open daily
+            Lalitpur · Open daily
           </span>
           <h1 className="text-display mt-6 max-w-3xl text-6xl sm:text-8xl">
             Your pitch is <span className="text-primary">one tap</span> away
@@ -135,10 +135,18 @@ function Home() {
                 {court.capacity} · {court.surface}
               </p>
               <p className="mt-3 flex-1 text-sm text-muted-foreground">{court.description}</p>
-              <p className="mt-4 text-display text-3xl">
-                {formatMoney(Number(court.price_per_hour))}
-                <span className="ml-1 text-sm font-normal text-muted-foreground">/ hour</span>
-              </p>
+              <div className="mt-4 space-y-1 text-sm text-muted-foreground">
+                {TIME_SLOTS.map((slot) => (
+                  <p key={slot.id} className="flex justify-between">
+                    <span>
+                      {slot.label} · {slot.note}
+                    </span>
+                    <span className="font-semibold text-foreground">
+                      {formatMoney(slot.rate)}/hr
+                    </span>
+                  </p>
+                ))}
+              </div>
               <Button asChild className="mt-4">
                 <Link to="/book">Check availability</Link>
               </Button>

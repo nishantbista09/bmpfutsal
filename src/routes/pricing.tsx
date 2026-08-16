@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { supabase } from "@/integrations/supabase/client";
-import { formatMoney, formatHour, VENUE } from "@/lib/venue";
+import { formatMoney, formatHour, VENUE, TIME_SLOTS } from "@/lib/venue";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -54,27 +54,27 @@ function Pricing() {
       <main className="mx-auto max-w-6xl px-4 py-16">
         <h1 className="text-display text-6xl">Pricing</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground">
-          Simple hourly pricing, same rate all day. Booking is open{" "}
+          Three sessions, three simple hourly rates. Booking is open{" "}
           {formatHour(VENUE.openFrom)} – {formatHour(VENUE.openTo)} every day.
         </p>
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {(courts ?? []).map((court) => (
-            <div key={court.id} className="surface-panel p-6">
-              <h2 className="text-2xl">{court.name}</h2>
-              <p className="mt-1 text-xs uppercase tracking-widest text-primary">
-                {court.capacity} · {court.surface}
-              </p>
-              <p className="text-display mt-4 text-4xl">
-                {formatMoney(Number(court.price_per_hour))}
-              </p>
+          {TIME_SLOTS.map((slot) => (
+            <div key={slot.id} className="surface-panel p-6">
+              <h2 className="text-2xl">{slot.label}</h2>
+              <p className="mt-1 text-xs uppercase tracking-widest text-primary">{slot.note}</p>
+              <p className="text-display mt-4 text-4xl">{formatMoney(slot.rate)}</p>
               <p className="text-sm text-muted-foreground">per hour</p>
               <Button asChild className="mt-5 w-full">
-                <Link to="/book">Book this court</Link>
+                <Link to="/book">Book this session</Link>
               </Button>
             </div>
           ))}
         </div>
+        <p className="mt-4 text-sm text-muted-foreground">
+          {(courts ?? [])[0]?.name ?? "BMP Futsal Ground"} · same 7-a-side pitch for every
+          session.
+        </p>
 
         <div className="surface-panel mt-10 p-6">
           <h2 className="text-2xl">Included with every booking</h2>
