@@ -15,8 +15,12 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   VENUE,
   PAYMENT_METHODS,
+  TIME_SLOTS,
   formatHour,
   formatMoney,
+  priceForRange,
+  rateForHour,
+  slotForHour,
   timeString,
   todayISO,
   prettyDate,
