@@ -54,7 +54,7 @@ function Pricing() {
       <main className="mx-auto max-w-6xl px-4 py-16">
         <h1 className="text-display text-6xl">Pricing</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground">
-          Simple hourly pricing, same rate all day. Booking is open{" "}
+          Three sessions, three simple hourly rates. Booking is open{" "}
           {formatHour(VENUE.openFrom)} – {formatHour(VENUE.openTo)} every day.
         </p>
 
