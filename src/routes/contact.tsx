@@ -12,7 +12,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Call, email or visit BMP Futsal in Kathmandu. Opening hours, directions and the fastest way to reach our team.",
+          "Call, email or visit BMP Futsal in Lalitpur. Opening hours, directions and the fastest way to reach our team.",
       },
       { property: "og:title", content: "Contact BMP Futsal" },
       {

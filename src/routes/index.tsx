@@ -6,18 +6,18 @@ import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { supabase } from "@/integrations/supabase/client";
-import { VENUE, formatHour, formatMoney } from "@/lib/venue";
+import { VENUE, formatHour, formatMoney, TIME_SLOTS } from "@/lib/venue";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "BMP Futsal — Book Your Futsal Pitch Online in Kathmandu" },
+      { title: "BMP Futsal — Book Your Futsal Pitch Online in Lalitpur" },
       {
         name: "description",
         content:
           "Book a floodlit futsal court at BMP Futsal in seconds. Live slot availability, instant online payment and confirmed bookings.",
       },
-      { property: "og:title", content: "BMP Futsal — Book Your Futsal Pitch Online in Kathmandu" },
+      { property: "og:title", content: "BMP Futsal — Book Your Futsal Pitch Online in Lalitpur" },
       {
         property: "og:description",
         content:
