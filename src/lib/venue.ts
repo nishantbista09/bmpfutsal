@@ -4,7 +4,7 @@ export const VENUE = {
   phone: "+977 9851086037",
   phoneAlt: "+977 9841392404",
   email: "bmpfutsal@gmail.com",
-  address: "BMP Futsal Ground, Kathmandu, Nepal",
+  address: "BMP Futsal Ground, Lalitpur, Nepal",
   mapsUrl: "https://maps.app.goo.gl/zCTah6x5aLZyyvnTA",
   mapsEmbed:
     "https://www.google.com/maps?q=27.7172,85.3240&z=15&output=embed",
