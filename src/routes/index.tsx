@@ -80,7 +80,7 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
         <div className="relative mx-auto max-w-6xl px-4 py-24 sm:py-32">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary">
-            Kathmandu · Open daily
+            Lalitpur · Open daily
           </span>
           <h1 className="text-display mt-6 max-w-3xl text-6xl sm:text-8xl">
             Your pitch is <span className="text-primary">one tap</span> away
