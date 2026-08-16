@@ -123,9 +123,9 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-20">
-        <h2 className="text-display text-5xl">Our courts</h2>
+        <h2 className="text-display text-5xl">Our ground</h2>
         <p className="mt-2 text-muted-foreground">
-          Three pitches, all under floodlights, all bookable by the hour.
+          A full-size 7-a-side pitch under floodlights, bookable by the hour.
         </p>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {(courts ?? []).map((court) => (
