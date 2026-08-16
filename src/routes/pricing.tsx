@@ -59,22 +59,22 @@ function Pricing() {
         </p>
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {(courts ?? []).map((court) => (
-            <div key={court.id} className="surface-panel p-6">
-              <h2 className="text-2xl">{court.name}</h2>
-              <p className="mt-1 text-xs uppercase tracking-widest text-primary">
-                {court.capacity} · {court.surface}
-              </p>
-              <p className="text-display mt-4 text-4xl">
-                {formatMoney(Number(court.price_per_hour))}
-              </p>
+          {TIME_SLOTS.map((slot) => (
+            <div key={slot.id} className="surface-panel p-6">
+              <h2 className="text-2xl">{slot.label}</h2>
+              <p className="mt-1 text-xs uppercase tracking-widest text-primary">{slot.note}</p>
+              <p className="text-display mt-4 text-4xl">{formatMoney(slot.rate)}</p>
               <p className="text-sm text-muted-foreground">per hour</p>
               <Button asChild className="mt-5 w-full">
-                <Link to="/book">Book this court</Link>
+                <Link to="/book">Book this session</Link>
               </Button>
             </div>
           ))}
         </div>
+        <p className="mt-4 text-sm text-muted-foreground">
+          {(courts ?? [])[0]?.name ?? "BMP Futsal Ground"} · same 7-a-side pitch for every
+          session.
+        </p>
 
         <div className="surface-panel mt-10 p-6">
           <h2 className="text-2xl">Included with every booking</h2>
