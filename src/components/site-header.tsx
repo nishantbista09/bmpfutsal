@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { VENUE } from "@/lib/venue";
+import logoAsset from "@/assets/bmp-logo.jpg.asset.json";
 
 const links = [
   { to: "/", label: "Home" },
