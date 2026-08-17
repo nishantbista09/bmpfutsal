@@ -16,6 +16,8 @@ import { Route as BookRouteImport } from './routes/book'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as MyBookingsRouteImport } from './routes/my-bookings'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as BookIndexRouteImport } from './routes/book.index'
+import { Route as BookConfirmRouteImport } from './routes/book.confirm'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,34 +54,49 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookIndexRoute = BookIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BookRoute,
+} as any)
+const BookConfirmRoute = BookConfirmRouteImport.update({
+  id: '/confirm',
+  path: '/confirm',
+  getParentRoute: () => BookRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/book': typeof BookRoute
+  '/book': typeof BookRouteWithChildren
   '/contact': typeof ContactRoute
   '/my-bookings': typeof MyBookingsRoute
   '/pricing': typeof PricingRoute
+  '/book/confirm': typeof BookConfirmRoute
+  '/book/': typeof BookIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/my-bookings': typeof MyBookingsRoute
   '/pricing': typeof PricingRoute
+  '/book/confirm': typeof BookConfirmRoute
+  '/book': typeof BookIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/book': typeof BookRoute
+  '/book': typeof BookRouteWithChildren
   '/contact': typeof ContactRoute
   '/my-bookings': typeof MyBookingsRoute
   '/pricing': typeof PricingRoute
+  '/book/confirm': typeof BookConfirmRoute
+  '/book/': typeof BookIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,15 +108,18 @@ export interface FileRouteTypes {
     | '/contact'
     | '/my-bookings'
     | '/pricing'
+    | '/book/confirm'
+    | '/book/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
     | '/auth'
-    | '/book'
     | '/contact'
     | '/my-bookings'
     | '/pricing'
+    | '/book/confirm'
+    | '/book'
   id:
     | '__root__'
     | '/'
@@ -109,13 +129,15 @@ export interface FileRouteTypes {
     | '/contact'
     | '/my-bookings'
     | '/pricing'
+    | '/book/confirm'
+    | '/book/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
-  BookRoute: typeof BookRoute
+  BookRoute: typeof BookRouteWithChildren
   ContactRoute: typeof ContactRoute
   MyBookingsRoute: typeof MyBookingsRoute
   PricingRoute: typeof PricingRoute
@@ -172,14 +194,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/book/': {
+      id: '/book/'
+      path: '/'
+      fullPath: '/book/'
+      preLoaderRoute: typeof BookIndexRouteImport
+      parentRoute: typeof BookRoute
+    }
+    '/book/confirm': {
+      id: '/book/confirm'
+      path: '/confirm'
+      fullPath: '/book/confirm'
+      preLoaderRoute: typeof BookConfirmRouteImport
+      parentRoute: typeof BookRoute
+    }
   }
 }
+
+interface BookRouteChildren {
+  BookConfirmRoute: typeof BookConfirmRoute
+  BookIndexRoute: typeof BookIndexRoute
+}
+
+const BookRouteChildren: BookRouteChildren = {
+  BookConfirmRoute: BookConfirmRoute,
+  BookIndexRoute: BookIndexRoute,
+}
+
+const BookRouteWithChildren = BookRoute._addFileChildren(BookRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
-  BookRoute: BookRoute,
+  BookRoute: BookRouteWithChildren,
   ContactRoute: ContactRoute,
   MyBookingsRoute: MyBookingsRoute,
   PricingRoute: PricingRoute,
