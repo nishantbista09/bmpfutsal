@@ -1,27 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
-import { toast } from "sonner";
 import { CalendarDays, Clock, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
   VENUE,
-  PAYMENT_METHODS,
   TIME_SLOTS,
   formatHour,
   formatMoney,
   priceForRange,
   rateForHour,
   slotForHour,
-  timeString,
   todayISO,
   prettyDate,
 } from "@/lib/venue";
@@ -45,23 +40,6 @@ export const Route = createFileRoute("/book")({
   component: BookPage,
 });
 
-const detailsSchema = z.object({
-  customerName: z.string().trim().min(2, "Enter your name").max(80),
-  customerPhone: z
-    .string()
-    .trim()
-    .min(7, "Enter a valid phone number")
-    .max(20)
-    .regex(/^[0-9+\-\s]+$/, "Phone can only contain numbers"),
-  notes: z.string().trim().max(500).optional(),
-  paymentMethod: z.enum(["esewa", "khalti", "bank"]),
-  paymentReference: z
-    .string()
-    .trim()
-    .min(4, "Enter the transaction / reference code")
-    .max(60),
-});
-
 function BookPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
@@ -69,8 +47,6 @@ function BookPage() {
   const [courtId, setCourtId] = useState<string>("");
   const [startHour, setStartHour] = useState<number | null>(null);
   const [duration, setDuration] = useState(1);
-  const [method, setMethod] = useState<(typeof PAYMENT_METHODS)[number]["id"]>("esewa");
-  const [submitting, setSubmitting] = useState(false);
 
   const { data: courts } = useQuery({
     queryKey: ["courts"],
@@ -89,7 +65,7 @@ function BookPage() {
     if (!courtId && courts && courts.length > 0) setCourtId(courts[0]!.id);
   }, [courts, courtId]);
 
-  const { data: taken, refetch } = useQuery({
+  const { data: taken } = useQuery({
     queryKey: ["slots", courtId, date],
     enabled: Boolean(courtId && date),
     queryFn: async () => {
@@ -105,7 +81,6 @@ function BookPage() {
   });
 
   const court = courts?.find((c) => c.id === courtId);
-  
 
   const busyHours = useMemo(() => {
     const set = new Set<number>();
@@ -143,61 +118,23 @@ function BookPage() {
 
   const total = startHour === null ? 0 : priceForRange(startHour, duration);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleContinue = () => {
     if (!user) {
-      toast.error("Please sign in to complete your booking.");
       void navigate({ to: "/auth" });
       return;
     }
-    if (startHour === null || !court) {
-      toast.error("Pick a time slot first.");
+    if (startHour === null || !courtId) {
       return;
     }
-    const form = new FormData(e.currentTarget);
-    const parsed = detailsSchema.safeParse({
-      customerName: form.get("customerName"),
-      customerPhone: form.get("customerPhone"),
-      notes: form.get("notes") || undefined,
-      paymentMethod: method,
-      paymentReference: form.get("paymentReference"),
+    void navigate({
+      to: "/book/confirm",
+      search: {
+        date,
+        courtId,
+        startHour,
+        duration,
+      },
     });
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Check your details");
-      return;
-    }
-
-    setSubmitting(true);
-    const { error } = await supabase.from("bookings").insert({
-      user_id: user.id,
-      court_id: court.id,
-      booking_date: date,
-      start_time: timeString(startHour),
-      end_time: timeString(startHour + duration),
-      hours: duration,
-      total_amount: total,
-      customer_name: parsed.data.customerName,
-      customer_phone: parsed.data.customerPhone,
-      notes: parsed.data.notes ?? null,
-      payment_method: parsed.data.paymentMethod,
-      payment_reference: parsed.data.paymentReference,
-      payment_status: "awaiting_verification",
-      status: "pending",
-    });
-    setSubmitting(false);
-
-    if (error) {
-      if (error.message.includes("bookings_no_overlap")) {
-        toast.error("Sorry, that slot was just taken. Please pick another time.");
-        void refetch();
-        return;
-      }
-      toast.error(error.message);
-      return;
-    }
-
-    toast.success("Booking sent! We'll confirm your payment shortly.");
-    void navigate({ to: "/my-bookings" });
   };
 
   return (
@@ -328,7 +265,7 @@ function BookPage() {
           </section>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <form className="surface-panel space-y-4 p-5" onSubmit={handleSubmit}>
+            <div className="surface-panel space-y-4 p-5">
               <h2 className="text-xl">Your booking</h2>
               <div className="rounded-lg bg-secondary/60 p-4 text-sm">
                 <p className="flex justify-between">
@@ -373,73 +310,15 @@ function BookPage() {
                   </Button>
                 </div>
               ) : (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="customerName">Full name</Label>
-                    <Input id="customerName" name="customerName" required maxLength={80} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="customerPhone">Phone</Label>
-                    <Input
-                      id="customerPhone"
-                      name="customerPhone"
-                      required
-                      maxLength={20}
-                      placeholder="98XXXXXXXX"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="notes">Notes (optional)</Label>
-                    <Textarea id="notes" name="notes" maxLength={500} rows={2} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Pay online</Label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {PAYMENT_METHODS.map((m) => (
-                        <button
-                          key={m.id}
-                          type="button"
-                          onClick={() => setMethod(m.id)}
-                          className={`rounded-lg border px-2 py-2 text-xs transition-colors ${
-                            method === m.id
-                              ? "border-primary bg-primary/10"
-                              : "border-border text-muted-foreground hover:bg-secondary"
-                          }`}
-                        >
-                          {m.label}
-                        </button>
-                      ))}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {PAYMENT_METHODS.find((m) => m.id === method)?.hint}
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="paymentReference">Transaction / reference code</Label>
-                    <Input
-                      id="paymentReference"
-                      name="paymentReference"
-                      required
-                      maxLength={60}
-                      placeholder="e.g. ESW-8842193"
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={submitting || startHour === null}
-                  >
-                    {submitting ? "Sending…" : `Confirm booking · ${formatMoney(total)}`}
-                  </Button>
-                  <p className="text-center text-xs text-muted-foreground">
-                    We verify your payment and confirm the slot — usually within minutes.
-                  </p>
-                </>
+                <Button
+                  className="w-full"
+                  disabled={startHour === null}
+                  onClick={handleContinue}
+                >
+                  {startHour === null ? "Pick a time slot" : "Review booking"}
+                </Button>
               )}
-            </form>
+            </div>
           </aside>
         </div>
       </main>
