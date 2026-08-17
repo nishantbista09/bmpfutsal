@@ -70,7 +70,7 @@ function ConfirmBookingPage() {
   const { date, courtId, startHour, duration } = Route.useSearch();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [method, setMethod] = useState<(typeof PAYMENT_METHODS)[number]["id"]("esewa");
+  const [method, setMethod] = useState<(typeof PAYMENT_METHODS)[number]["id"]>("esewa");
   const [submitting, setSubmitting] = useState(false);
 
   const { data: court } = useQuery({
