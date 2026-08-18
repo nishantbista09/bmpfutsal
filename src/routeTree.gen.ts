@@ -18,6 +18,7 @@ import { Route as MyBookingsRouteImport } from './routes/my-bookings'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as BookIndexRouteImport } from './routes/book.index'
 import { Route as BookConfirmRouteImport } from './routes/book.confirm'
+import { Route as BookPaymentRouteImport } from './routes/book.payment'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const BookConfirmRoute = BookConfirmRouteImport.update({
   path: '/confirm',
   getParentRoute: () => BookRoute,
 } as any)
+const BookPaymentRoute = BookPaymentRouteImport.update({
+  id: '/payment',
+  path: '/payment',
+  getParentRoute: () => BookRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/my-bookings': typeof MyBookingsRoute
   '/pricing': typeof PricingRoute
   '/book/confirm': typeof BookConfirmRoute
+  '/book/payment': typeof BookPaymentRoute
   '/book/': typeof BookIndexRoute
 }
 export interface FileRoutesByTo {
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/my-bookings': typeof MyBookingsRoute
   '/pricing': typeof PricingRoute
   '/book/confirm': typeof BookConfirmRoute
+  '/book/payment': typeof BookPaymentRoute
   '/book': typeof BookIndexRoute
 }
 export interface FileRoutesById {
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/my-bookings': typeof MyBookingsRoute
   '/pricing': typeof PricingRoute
   '/book/confirm': typeof BookConfirmRoute
+  '/book/payment': typeof BookPaymentRoute
   '/book/': typeof BookIndexRoute
 }
 export interface FileRouteTypes {
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/my-bookings'
     | '/pricing'
     | '/book/confirm'
+    | '/book/payment'
     | '/book/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/my-bookings'
     | '/pricing'
     | '/book/confirm'
+    | '/book/payment'
     | '/book'
   id:
     | '__root__'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/my-bookings'
     | '/pricing'
     | '/book/confirm'
+    | '/book/payment'
     | '/book/'
   fileRoutesById: FileRoutesById
 }
@@ -208,16 +220,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookConfirmRouteImport
       parentRoute: typeof BookRoute
     }
+    '/book/payment': {
+      id: '/book/payment'
+      path: '/payment'
+      fullPath: '/book/payment'
+      preLoaderRoute: typeof BookPaymentRouteImport
+      parentRoute: typeof BookRoute
+    }
   }
 }
 
 interface BookRouteChildren {
   BookConfirmRoute: typeof BookConfirmRoute
+  BookPaymentRoute: typeof BookPaymentRoute
   BookIndexRoute: typeof BookIndexRoute
 }
 
 const BookRouteChildren: BookRouteChildren = {
   BookConfirmRoute: BookConfirmRoute,
+  BookPaymentRoute: BookPaymentRoute,
   BookIndexRoute: BookIndexRoute,
 }
 

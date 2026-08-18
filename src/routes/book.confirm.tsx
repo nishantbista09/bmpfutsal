@@ -59,19 +59,14 @@ const detailsSchema = z.object({
     .max(20)
     .regex(/^[0-9+\-\s]+$/, "Phone can only contain numbers"),
   notes: z.string().trim().max(500).optional(),
-  paymentReference: z
-    .string()
-    .trim()
-    .min(4, "Enter the transaction / reference code")
-    .max(60),
 });
 
 function ConfirmBookingPage() {
   const { date, courtId, startHour, duration } = Route.useSearch();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [method, setMethod] = useState<(typeof PAYMENT_METHODS)[number]["id"]>("esewa");
   const [submitting, setSubmitting] = useState(false);
+
 
   const { data: court } = useQuery({
     queryKey: ["court", courtId],
