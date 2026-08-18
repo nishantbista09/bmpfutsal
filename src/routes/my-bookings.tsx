@@ -181,7 +181,7 @@ function MyBookings() {
                   </Link>
                 </Button>
               )}
-            {canCancel && b.status !== "cancelled" && b.status !== "completed" && (
+            {canCancel && b.status === "pending" && (
               <Button size="sm" variant="outline" onClick={() => void cancel(b)}>
                 Cancel
               </Button>
