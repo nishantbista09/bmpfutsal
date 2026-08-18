@@ -126,7 +126,6 @@ function ConfirmBookingPage() {
       customerName: form.get("customerName"),
       customerPhone: form.get("customerPhone"),
       notes: form.get("notes") || undefined,
-      paymentReference: form.get("paymentReference"),
     });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0]?.message ?? "Check your details");
@@ -140,22 +139,24 @@ function ConfirmBookingPage() {
     }
 
     setSubmitting(true);
-    const { error } = await supabase.from("bookings").insert({
-      user_id: user.id,
-      court_id: court.id,
-      booking_date: date,
-      start_time: timeString(startHour),
-      end_time: timeString(endHour),
-      hours: duration,
-      total_amount: total,
-      customer_name: parsed.data.customerName,
-      customer_phone: parsed.data.customerPhone,
-      notes: parsed.data.notes ?? null,
-      payment_method: method,
-      payment_reference: parsed.data.paymentReference,
-      payment_status: "awaiting_verification",
-      status: "pending",
-    });
+    const { data: created, error } = await supabase
+      .from("bookings")
+      .insert({
+        user_id: user.id,
+        court_id: court.id,
+        booking_date: date,
+        start_time: timeString(startHour),
+        end_time: timeString(endHour),
+        hours: duration,
+        total_amount: total,
+        customer_name: parsed.data.customerName,
+        customer_phone: parsed.data.customerPhone,
+        notes: parsed.data.notes ?? null,
+        payment_status: "unpaid",
+        status: "pending",
+      })
+      .select("id")
+      .single();
     setSubmitting(false);
 
     if (error) {
@@ -168,9 +169,9 @@ function ConfirmBookingPage() {
       return;
     }
 
-    toast.success("Booking sent! We'll confirm your payment shortly.");
-    void navigate({ to: "/my-bookings" });
+    void navigate({ to: "/book/payment", search: { bookingId: created.id } });
   };
+
 
   return (
     <div className="min-h-screen">
