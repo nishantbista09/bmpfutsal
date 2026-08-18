@@ -289,49 +289,16 @@ function ConfirmBookingPage() {
                   <Textarea id="notes" name="notes" maxLength={500} rows={2} />
                 </div>
 
-                <div className="space-y-2">
-                  <Label>Pay online</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {PAYMENT_METHODS.map((m) => (
-                      <button
-                        key={m.id}
-                        type="button"
-                        onClick={() => setMethod(m.id)}
-                        className={`rounded-lg border px-2 py-2 text-xs transition-colors ${
-                          method === m.id
-                            ? "border-primary bg-primary/10"
-                            : "border-border text-muted-foreground hover:bg-secondary"
-                        }`}
-                      >
-                        {m.label}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {PAYMENT_METHODS.find((m) => m.id === method)?.hint}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="paymentReference">Transaction / reference code</Label>
-                  <Input
-                    id="paymentReference"
-                    name="paymentReference"
-                    required
-                    maxLength={60}
-                    placeholder="e.g. ESW-8842193"
-                  />
-                </div>
-
                 <Button
                   type="submit"
                   className="w-full"
                   disabled={submitting || isTaken() || !court}
                 >
-                  {submitting ? "Sending…" : `Complete payment · ${formatMoney(total)}`}
+                  {submitting ? "Sending…" : `Continue to payment · ${formatMoney(total)}`}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
-                  We verify your payment and confirm the slot — usually within minutes.
+                  You'll pay on the next step with eSewa, Khalti or Fonepay.
+
                 </p>
               </form>
             )}
