@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
   VENUE,
-  PAYMENT_METHODS,
+  
   formatHour,
   formatMoney,
   priceForRange,
@@ -59,19 +59,14 @@ const detailsSchema = z.object({
     .max(20)
     .regex(/^[0-9+\-\s]+$/, "Phone can only contain numbers"),
   notes: z.string().trim().max(500).optional(),
-  paymentReference: z
-    .string()
-    .trim()
-    .min(4, "Enter the transaction / reference code")
-    .max(60),
 });
 
 function ConfirmBookingPage() {
   const { date, courtId, startHour, duration } = Route.useSearch();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [method, setMethod] = useState<(typeof PAYMENT_METHODS)[number]["id"]>("esewa");
   const [submitting, setSubmitting] = useState(false);
+
 
   const { data: court } = useQuery({
     queryKey: ["court", courtId],
@@ -131,7 +126,6 @@ function ConfirmBookingPage() {
       customerName: form.get("customerName"),
       customerPhone: form.get("customerPhone"),
       notes: form.get("notes") || undefined,
-      paymentReference: form.get("paymentReference"),
     });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0]?.message ?? "Check your details");
@@ -145,22 +139,24 @@ function ConfirmBookingPage() {
     }
 
     setSubmitting(true);
-    const { error } = await supabase.from("bookings").insert({
-      user_id: user.id,
-      court_id: court.id,
-      booking_date: date,
-      start_time: timeString(startHour),
-      end_time: timeString(endHour),
-      hours: duration,
-      total_amount: total,
-      customer_name: parsed.data.customerName,
-      customer_phone: parsed.data.customerPhone,
-      notes: parsed.data.notes ?? null,
-      payment_method: method,
-      payment_reference: parsed.data.paymentReference,
-      payment_status: "awaiting_verification",
-      status: "pending",
-    });
+    const { data: created, error } = await supabase
+      .from("bookings")
+      .insert({
+        user_id: user.id,
+        court_id: court.id,
+        booking_date: date,
+        start_time: timeString(startHour),
+        end_time: timeString(endHour),
+        hours: duration,
+        total_amount: total,
+        customer_name: parsed.data.customerName,
+        customer_phone: parsed.data.customerPhone,
+        notes: parsed.data.notes ?? null,
+        payment_status: "unpaid",
+        status: "pending",
+      })
+      .select("id")
+      .single();
     setSubmitting(false);
 
     if (error) {
@@ -173,9 +169,9 @@ function ConfirmBookingPage() {
       return;
     }
 
-    toast.success("Booking sent! We'll confirm your payment shortly.");
-    void navigate({ to: "/my-bookings" });
+    void navigate({ to: "/book/payment", search: { bookingId: created.id } });
   };
+
 
   return (
     <div className="min-h-screen">
@@ -294,49 +290,16 @@ function ConfirmBookingPage() {
                   <Textarea id="notes" name="notes" maxLength={500} rows={2} />
                 </div>
 
-                <div className="space-y-2">
-                  <Label>Pay online</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {PAYMENT_METHODS.map((m) => (
-                      <button
-                        key={m.id}
-                        type="button"
-                        onClick={() => setMethod(m.id)}
-                        className={`rounded-lg border px-2 py-2 text-xs transition-colors ${
-                          method === m.id
-                            ? "border-primary bg-primary/10"
-                            : "border-border text-muted-foreground hover:bg-secondary"
-                        }`}
-                      >
-                        {m.label}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {PAYMENT_METHODS.find((m) => m.id === method)?.hint}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="paymentReference">Transaction / reference code</Label>
-                  <Input
-                    id="paymentReference"
-                    name="paymentReference"
-                    required
-                    maxLength={60}
-                    placeholder="e.g. ESW-8842193"
-                  />
-                </div>
-
                 <Button
                   type="submit"
                   className="w-full"
                   disabled={submitting || isTaken() || !court}
                 >
-                  {submitting ? "Sending…" : `Complete payment · ${formatMoney(total)}`}
+                  {submitting ? "Sending…" : `Continue to payment · ${formatMoney(total)}`}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
-                  We verify your payment and confirm the slot — usually within minutes.
+                  You'll pay on the next step with eSewa, Khalti or Fonepay.
+
                 </p>
               </form>
             )}
