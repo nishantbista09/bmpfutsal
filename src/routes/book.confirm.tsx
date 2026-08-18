@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
   VENUE,
-  PAYMENT_METHODS,
+  
   formatHour,
   formatMoney,
   priceForRange,
