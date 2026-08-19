@@ -13,10 +13,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
   PAYMENT_METHODS,
+  VENUE,
+  bookingRef,
   formatMoney,
   formatTimeLabel,
   prettyDate,
   slotForHour,
+  waLink,
 } from "@/lib/venue";
 
 const searchSchema = z.object({
