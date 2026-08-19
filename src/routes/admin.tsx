@@ -9,7 +9,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { formatMoney, formatTimeLabel, prettyDate, todayISO } from "@/lib/venue";
+import type { Tables } from "@/integrations/supabase/types";
+import {
+  VENUE,
+  bookingRef,
+  formatMoney,
+  formatTimeLabel,
+  prettyDate,
+  slotForHour,
+  todayISO,
+  waLink,
+} from "@/lib/venue";
+
+type BookingRow = Tables<"bookings"> & { courts?: { name: string } | null };
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
