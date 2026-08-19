@@ -11,7 +11,10 @@ import { SiteFooter } from "@/components/site-footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
+  VENUE,
+  bookingRef,
   formatMoney,
+  waLink,
   formatTimeLabel,
   prettyDate,
   slotForHour,
