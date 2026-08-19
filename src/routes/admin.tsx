@@ -17,6 +17,7 @@ import {
   formatTimeLabel,
   prettyDate,
   slotForHour,
+  smsLink,
   todayISO,
   waLink,
 } from "@/lib/venue";
