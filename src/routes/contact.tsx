@@ -44,9 +44,6 @@ function Contact() {
                 <a href={`tel:${VENUE.phone}`} className="block text-sm text-muted-foreground">
                   {VENUE.phone}
                 </a>
-                <a href={`tel:${VENUE.phoneAlt}`} className="block text-sm text-muted-foreground">
-                  {VENUE.phoneAlt}
-                </a>
               </div>
             </div>
             <div className="flex items-start gap-3">
