@@ -279,6 +279,28 @@ function AdminPage() {
                         </Button>
                       </div>
                     )}
+                    <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                      <a
+                        className="rounded-md border border-border px-2 py-1 hover:bg-secondary"
+                        href={waLink(b.customer_phone, customerMessage(b, b.status))}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        WhatsApp customer
+                      </a>
+                      <a
+                        className="rounded-md border border-border px-2 py-1 hover:bg-secondary"
+                        href={smsLink(b.customer_phone, customerMessage(b, b.status))}
+                      >
+                        SMS customer
+                      </a>
+                      <a
+                        className="rounded-md border border-border px-2 py-1 hover:bg-secondary"
+                        href={`tel:${b.customer_phone}`}
+                      >
+                        Call
+                      </a>
+                    </div>
                   </article>
                 ))}
               </TabsContent>
