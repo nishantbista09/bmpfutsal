@@ -95,21 +95,35 @@ function AdminPage() {
     };
   }, [isAdmin, queryClient]);
 
+  const customerMessage = (b: BookingRow, status: string) => {
+    const when = `${prettyDate(b.booking_date)}, ${formatTimeLabel(b.start_time)}–${formatTimeLabel(b.end_time)} (${Number(b.hours)} hr)`;
+    const session = slotForHour(Number(b.start_time.slice(0, 2)))?.label ?? "";
+    if (status === "cancelled") {
+      return `Hi ${b.customer_name}, your BMP Futsal booking ${bookingRef(b.id)} for ${when} has been CANCELLED. Please contact us on ${VENUE.phoneLocal} if you need help.`;
+    }
+    return `Hi ${b.customer_name}, your BMP Futsal booking ${bookingRef(b.id)} is CONFIRMED ✅\n${session} session · ${when}\nTotal: ${formatMoney(Number(b.total_amount))}\nSee you at ${VENUE.address}.`;
+  };
+
   const setStatus = async (
-    id: string,
+    booking: BookingRow,
     status: string,
     paymentStatus?: string,
   ) => {
     const { error } = await supabase
       .from("bookings")
       .update(paymentStatus ? { status, payment_status: paymentStatus } : { status })
-      .eq("id", id);
+      .eq("id", booking.id);
     if (error) {
       toast.error(error.message);
       return;
     }
     toast.success(`Booking ${status}.`);
     void queryClient.invalidateQueries({ queryKey: ["admin-bookings"] });
+
+    if (status === "confirmed" || status === "cancelled") {
+      const msg = customerMessage(booking, status);
+      window.open(waLink(booking.customer_phone, msg), "_blank", "noopener");
+    }
   };
 
   const markAllRead = async () => {
