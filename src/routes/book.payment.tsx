@@ -126,6 +126,12 @@ function PaymentPage() {
           <div className="mt-8 space-y-6">
             <section className="surface-panel space-y-3 p-6 text-sm">
               <p className="flex justify-between">
+                <span className="text-muted-foreground">Booking reference</span>
+                <span className="font-mono font-semibold text-primary">
+                  {bookingRef(booking.id)}
+                </span>
+              </p>
+              <p className="flex justify-between">
                 <span className="text-muted-foreground">Ground</span>
                 <span className="font-medium">{booking.courts?.name ?? "—"}</span>
               </p>
