@@ -13,10 +13,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
   PAYMENT_METHODS,
+  VENUE,
+  bookingRef,
   formatMoney,
   formatTimeLabel,
   prettyDate,
   slotForHour,
+  waLink,
 } from "@/lib/venue";
 
 const searchSchema = z.object({
@@ -126,6 +129,12 @@ function PaymentPage() {
           <div className="mt-8 space-y-6">
             <section className="surface-panel space-y-3 p-6 text-sm">
               <p className="flex justify-between">
+                <span className="text-muted-foreground">Booking reference</span>
+                <span className="font-mono font-semibold text-primary">
+                  {bookingRef(booking.id)}
+                </span>
+              </p>
+              <p className="flex justify-between">
                 <span className="text-muted-foreground">Ground</span>
                 <span className="font-medium">{booking.courts?.name ?? "—"}</span>
               </p>
@@ -175,9 +184,36 @@ function PaymentPage() {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground">
-                {PAYMENT_METHODS.find((m) => m.id === method)?.hint}
-              </p>
+              <div className="rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm">
+                <p className="text-muted-foreground">
+                  Send {formatMoney(Number(booking.total_amount))} via{" "}
+                  {PAYMENT_METHODS.find((m) => m.id === method)?.label} to
+                </p>
+                <p className="text-display mt-1 text-3xl tracking-wide text-primary">
+                  {VENUE.phoneLocal}
+                </p>
+                <p className="text-xs text-muted-foreground">BMP Futsal · {VENUE.name}</p>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  In the payment remarks write your booking reference{" "}
+                  <span className="font-mono font-semibold text-foreground">
+                    {bookingRef(booking.id)}
+                  </span>{" "}
+                  so we can match it instantly.
+                </p>
+                <Button asChild variant="outline" size="sm" className="mt-3">
+                  <a
+                    href={waLink(
+                      VENUE.whatsapp,
+                      `Hi BMP Futsal, I am sending payment for booking ${bookingRef(booking.id)} — ${prettyDate(booking.booking_date)}, ${formatTimeLabel(booking.start_time)}–${formatTimeLabel(booking.end_time)}, ${formatMoney(Number(booking.total_amount))}.`,
+                    )}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Send payment screenshot on WhatsApp
+                  </a>
+                </Button>
+              </div>
+
 
               <div className="space-y-2">
                 <Label htmlFor="reference">Transaction / reference code</Label>

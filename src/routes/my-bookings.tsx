@@ -11,7 +11,10 @@ import { SiteFooter } from "@/components/site-footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
+  VENUE,
+  bookingRef,
   formatMoney,
+  waLink,
   formatTimeLabel,
   prettyDate,
   slotForHour,
@@ -150,9 +153,21 @@ function MyBookings() {
             {session?.label ?? "—"} session · {Number(b.hours)} hour
             {Number(b.hours) > 1 ? "s" : ""}
           </p>
+          <p className="mt-1 font-mono text-xs text-primary">{bookingRef(b.id)}</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Ref: {b.payment_reference ?? "—"} · {b.payment_method ?? "—"}
+            Txn: {b.payment_reference ?? "—"} · {b.payment_method ?? "—"}
           </p>
+          <a
+            className="mt-2 inline-block rounded-md border border-border px-2 py-1 text-xs hover:bg-secondary"
+            href={waLink(
+              VENUE.whatsapp,
+              `Hi BMP Futsal, about my booking ${bookingRef(b.id)} on ${prettyDate(b.booking_date)} at ${formatTimeLabel(b.start_time)}.`,
+            )}
+            target="_blank"
+            rel="noreferrer"
+          >
+            WhatsApp us
+          </a>
         </div>
         <div className="flex flex-col items-end gap-2">
           <div className="flex gap-2">

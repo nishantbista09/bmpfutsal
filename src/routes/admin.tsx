@@ -9,7 +9,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { formatMoney, formatTimeLabel, prettyDate, todayISO } from "@/lib/venue";
+import type { Tables } from "@/integrations/supabase/types";
+import {
+  VENUE,
+  bookingRef,
+  formatMoney,
+  formatTimeLabel,
+  prettyDate,
+  slotForHour,
+  smsLink,
+  todayISO,
+  waLink,
+} from "@/lib/venue";
+
+type BookingRow = Tables<"bookings"> & { courts?: { name: string } | null };
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -95,21 +108,35 @@ function AdminPage() {
     };
   }, [isAdmin, queryClient]);
 
+  const customerMessage = (b: BookingRow, status: string) => {
+    const when = `${prettyDate(b.booking_date)}, ${formatTimeLabel(b.start_time)}–${formatTimeLabel(b.end_time)} (${Number(b.hours)} hr)`;
+    const session = slotForHour(Number(b.start_time.slice(0, 2)))?.label ?? "";
+    if (status === "cancelled") {
+      return `Hi ${b.customer_name}, your BMP Futsal booking ${bookingRef(b.id)} for ${when} has been CANCELLED. Please contact us on ${VENUE.phoneLocal} if you need help.`;
+    }
+    return `Hi ${b.customer_name}, your BMP Futsal booking ${bookingRef(b.id)} is CONFIRMED ✅\n${session} session · ${when}\nTotal: ${formatMoney(Number(b.total_amount))}\nSee you at ${VENUE.address}.`;
+  };
+
   const setStatus = async (
-    id: string,
+    booking: BookingRow,
     status: string,
     paymentStatus?: string,
   ) => {
     const { error } = await supabase
       .from("bookings")
       .update(paymentStatus ? { status, payment_status: paymentStatus } : { status })
-      .eq("id", id);
+      .eq("id", booking.id);
     if (error) {
       toast.error(error.message);
       return;
     }
     toast.success(`Booking ${status}.`);
     void queryClient.invalidateQueries({ queryKey: ["admin-bookings"] });
+
+    if (status === "confirmed" || status === "cancelled") {
+      const msg = customerMessage(booking, status);
+      window.open(waLink(booking.customer_phone, msg), "_blank", "noopener");
+    }
   };
 
   const markAllRead = async () => {
@@ -204,6 +231,7 @@ function AdminPage() {
                             · {b.customer_phone}
                           </span>
                         </p>
+                        <p className="font-mono text-xs text-primary">{bookingRef(b.id)}</p>
                         <p className="text-sm text-muted-foreground">
                           {b.courts?.name} · {prettyDate(b.booking_date)} ·{" "}
                           {formatTimeLabel(b.start_time)} – {formatTimeLabel(b.end_time)}
@@ -229,13 +257,13 @@ function AdminPage() {
                     </div>
                     {b.status === "pending" && (
                       <div className="mt-3 flex gap-2">
-                        <Button size="sm" onClick={() => setStatus(b.id, "confirmed", "paid")}>
+                        <Button size="sm" onClick={() => setStatus(b, "confirmed", "paid")}>
                           <CheckCircle2 className="size-4" /> Confirm & mark paid
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setStatus(b.id, "cancelled")}
+                          onClick={() => setStatus(b, "cancelled")}
                         >
                           <XCircle className="size-4" /> Reject
                         </Button>
@@ -246,12 +274,34 @@ function AdminPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setStatus(b.id, "completed")}
+                          onClick={() => setStatus(b, "completed")}
                         >
                           Mark completed
                         </Button>
                       </div>
                     )}
+                    <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                      <a
+                        className="rounded-md border border-border px-2 py-1 hover:bg-secondary"
+                        href={waLink(b.customer_phone, customerMessage(b, b.status))}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        WhatsApp customer
+                      </a>
+                      <a
+                        className="rounded-md border border-border px-2 py-1 hover:bg-secondary"
+                        href={smsLink(b.customer_phone, customerMessage(b, b.status))}
+                      >
+                        SMS customer
+                      </a>
+                      <a
+                        className="rounded-md border border-border px-2 py-1 hover:bg-secondary"
+                        href={`tel:${b.customer_phone}`}
+                      >
+                        Call
+                      </a>
+                    </div>
                   </article>
                 ))}
               </TabsContent>
