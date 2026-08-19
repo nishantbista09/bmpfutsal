@@ -1,9 +1,10 @@
 export const VENUE = {
   name: "BMP Futsal",
   tagline: "Book your pitch. Bring your squad. Play under the lights.",
-  phone: "+977 9851086037",
-  phoneAlt: "+977 9841392404",
-  email: "bmpfutsal@gmail.com",
+  phone: "+977 9704509837",
+  phoneLocal: "9704509837",
+  whatsapp: "9779704509837",
+  email: "info@sports.com",
   address: "BMP Futsal Ground, Lalitpur, Nepal",
   mapsUrl: "https://maps.app.goo.gl/zCTah6x5aLZyyvnTA",
   mapsEmbed:
