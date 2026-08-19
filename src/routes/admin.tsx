@@ -255,13 +255,13 @@ function AdminPage() {
                     </div>
                     {b.status === "pending" && (
                       <div className="mt-3 flex gap-2">
-                        <Button size="sm" onClick={() => setStatus(b.id, "confirmed", "paid")}>
+                        <Button size="sm" onClick={() => setStatus(b, "confirmed", "paid")}>
                           <CheckCircle2 className="size-4" /> Confirm & mark paid
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setStatus(b.id, "cancelled")}
+                          onClick={() => setStatus(b, "cancelled")}
                         >
                           <XCircle className="size-4" /> Reject
                         </Button>
@@ -272,7 +272,7 @@ function AdminPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setStatus(b.id, "completed")}
+                          onClick={() => setStatus(b, "completed")}
                         >
                           Mark completed
                         </Button>
