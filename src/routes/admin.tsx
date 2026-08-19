@@ -230,6 +230,7 @@ function AdminPage() {
                             · {b.customer_phone}
                           </span>
                         </p>
+                        <p className="font-mono text-xs text-primary">{bookingRef(b.id)}</p>
                         <p className="text-sm text-muted-foreground">
                           {b.courts?.name} · {prettyDate(b.booking_date)} ·{" "}
                           {formatTimeLabel(b.start_time)} – {formatTimeLabel(b.end_time)}
