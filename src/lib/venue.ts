@@ -15,10 +15,26 @@ export const VENUE = {
 } as const;
 
 export const PAYMENT_METHODS = [
-  { id: "esewa", label: "eSewa", hint: "Send to eSewa 9851086037 (BMP Futsal)" },
-  { id: "khalti", label: "Khalti", hint: "Send to Khalti 9851086037 (BMP Futsal)" },
-  { id: "fonepay", label: "Fonepay QR", hint: "Scan Fonepay QR — BMP Futsal" },
+  { id: "esewa", label: "eSewa", hint: "Send to eSewa 9704509837 (BMP Futsal)" },
+  { id: "khalti", label: "Khalti", hint: "Send to Khalti 9704509837 (BMP Futsal)" },
+  { id: "fonepay", label: "Fonepay QR", hint: "Fonepay / bank transfer to 9704509837 — BMP Futsal" },
 ] as const;
+
+/** Short human-friendly booking reference derived from the booking id. */
+export function bookingRef(id: string) {
+  return `BMP-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
+}
+
+/** Opens a WhatsApp chat (works on phone + desktop, no setup needed). */
+export function waLink(phone: string, message: string) {
+  const digits = phone.replace(/\D/g, "");
+  const withCode = digits.startsWith("977") ? digits : `977${digits.replace(/^0+/, "")}`;
+  return `https://wa.me/${withCode}?text=${encodeURIComponent(message)}`;
+}
+
+export function smsLink(phone: string, message: string) {
+  return `sms:${phone.replace(/\s/g, "")}?&body=${encodeURIComponent(message)}`;
+}
 
 export const TIME_SLOTS = [
   { id: "morning", label: "Morning", from: 6, to: 12, rate: 1200, note: "6:00 AM – 11:59 AM" },
