@@ -32,12 +32,6 @@ export function SiteFooter() {
             </a>
           </p>
           <p className="flex items-center gap-2">
-            <Phone className="size-4 text-primary" />
-            <a href={`tel:${VENUE.phoneAlt}`} className="hover:text-foreground">
-              {VENUE.phoneAlt}
-            </a>
-          </p>
-          <p className="flex items-center gap-2">
             <Mail className="size-4 text-primary" />
             <a href={`mailto:${VENUE.email}`} className="hover:text-foreground">
               {VENUE.email}
