@@ -17,7 +17,6 @@ export const VENUE = {
 export const PAYMENT_METHODS = [
   { id: "esewa", label: "eSewa", hint: "Send to eSewa 9704509837 (BMP Futsal)" },
   { id: "khalti", label: "Khalti", hint: "Send to Khalti 9704509837 (BMP Futsal)" },
-  { id: "fonepay", label: "Fonepay QR", hint: "Fonepay / bank transfer to 9704509837 — BMP Futsal" },
 ] as const;
 
 /** Short human-friendly booking reference derived from the booking id. */

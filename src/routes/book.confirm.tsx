@@ -298,7 +298,7 @@ function ConfirmBookingPage() {
                   {submitting ? "Sending…" : `Continue to payment · ${formatMoney(total)}`}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
-                  You'll pay on the next step with eSewa, Khalti or Fonepay.
+                  You'll pay on the next step with eSewa or Khalti.
 
                 </p>
               </form>

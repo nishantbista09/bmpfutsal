@@ -33,7 +33,7 @@ export const Route = createFileRoute("/book/payment")({
       {
         name: "description",
         content:
-          "Complete your BMP Futsal payment securely with eSewa, Khalti or Fonepay and lock in your ground slot.",
+          "Complete your BMP Futsal payment securely with eSewa or Khalti and lock in your ground slot.",
       },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Pay for Your Booking — BMP Futsal" },
@@ -168,7 +168,7 @@ function PaymentPage() {
                 <h2 className="text-xl">Choose payment method</h2>
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 {PAYMENT_METHODS.map((m) => (
                   <button
                     key={m.id}
